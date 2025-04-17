@@ -67,12 +67,10 @@ export const fetchFullMessageById = async (
 
     const messageData = await response.json();
 
-    // Extract subject
     const headers = messageData.payload?.headers || [];
     const subjectHeader = headers.find((h: any) => h.name === 'Subject');
     const subject = subjectHeader?.value || '(No Subject)';
 
-    // Extract body (only plain text part)
     let body = '';
     const parts = messageData.payload?.parts || [];
     for (const part of parts) {
@@ -102,37 +100,36 @@ export default function Home() {
   const [rejections, setRejections] = useState(0);
   const [noResponses, setNoResponses] = useState(0);
   const [popupBlocked, setPopupBlocked] = useState(false);
-    const { toast } = useToast()
-    const [authInitialized, setAuthInitialized] = useState(false);
-
+  const { toast } = useToast();
+  const [authInitialized, setAuthInitialized] = useState(false);
 
   useEffect(() => {
-        const initializeAuth = async () => {
-            if (!auth) {
-                console.error('Firebase Authentication is not initialized.');
-                setFirebaseError('Firebase Authentication is not initialized.');
-                return;
-            }
+    const initializeAuth = async () => {
+      if (!auth) {
+        console.error('Firebase Authentication is not initialized.');
+        setFirebaseError('Firebase Authentication is not initialized.');
+        return;
+      }
 
-            const unsubscribe = auth.onAuthStateChanged(user => {
-                if (user) {
-                    setUser(user);
-                } else {
-                    setUser(null);
-                    setAccessToken(null);
-                    setTotalApplications(0);
-                    setResponses(0);
-                    setRejections(0);
-                    setNoResponses(0);
-                }
-            });
+      const unsubscribe = auth.onAuthStateChanged(user => {
+        if (user) {
+          setUser(user);
+        } else {
+          setUser(null);
+          setAccessToken(null);
+          setTotalApplications(0);
+          setResponses(0);
+          setRejections(0);
+          setNoResponses(0);
+        }
+      });
 
-            setAuthInitialized(true);
-            return () => unsubscribe();
-        };
+      setAuthInitialized(true);
+      return () => unsubscribe();
+    };
 
-        initializeAuth();
-    }, []);
+    initializeAuth();
+  }, []);
 
   const signInWithGoogleHandler = async () => {
     try {
@@ -152,10 +149,10 @@ export default function Home() {
       console.log('✅ Logged in:', user.email);
       console.log('🔑 Access token:', token);
       setPopupBlocked(false);
-        toast({
-            title: "Success",
-            description: "Login Successful",
-        })
+      toast({
+        title: "Success",
+        description: "Login Successful",
+      });
 
     } catch (error: any) {
       console.error('❌ Google Sign-In Error:', error);
@@ -187,61 +184,58 @@ export default function Home() {
   };
 
   const analyzeGmailEmails = async () => {
-        if (!accessToken) {
-            console.log('Access token not available.');
-            return;
+    if (!accessToken) {
+      console.log('Access token not available.');
+      return;
+    }
+
+    try {
+      const messages = await fetchGmailEmails(accessToken);
+      let responseCount = 0;
+      let rejectionCount = 0;
+
+      for (const message of messages) {
+        if (!message.id) continue;
+
+        const fullMessage = await fetchFullMessageById(accessToken, message.id);
+        if (!fullMessage) continue;
+
+        const subject = fullMessage.subject.toLowerCase();
+        const body = fullMessage.body.toLowerCase();
+        const combinedText = subject + ' ' + body;
+
+        if (combinedText.includes('rejected') || combinedText.includes('rejection')) {
+          rejectionCount++;
+        } else if (
+          combinedText.includes('thank you') ||
+          combinedText.includes('response') ||
+          combinedText.includes('position') ||
+          combinedText.includes('role') ||
+          combinedText.includes('hiring')
+        ) {
+          responseCount++;
         }
+      }
 
-        try {
-            const messages = await fetchGmailEmails(accessToken);
-            let responseCount = 0;
-            let rejectionCount = 0;
+      setTotalApplications(messages.length);
+      setResponses(responseCount);
+      setRejections(rejectionCount);
+      setNoResponses(messages.length - responseCount - rejectionCount);
+      toast({
+        title: "Success",
+        description: "Emails Analyzed!",
+      });
 
-            for (const message of messages) {
-                if (!message.id) continue;
-
-                const fullMessage = await fetchFullMessageById(accessToken, message.id);
-                if (!fullMessage) continue;
-
-                const subject = fullMessage.subject.toLowerCase();
-                const body = fullMessage.body.toLowerCase();
-                const combinedText = subject + ' ' + body;
-
-                if (
-                    combinedText.includes('rejected') ||
-                    combinedText.includes('rejection')
-                ) {
-                    rejectionCount++;
-                } else if (
-                    combinedText.includes('thank you') ||
-                    combinedText.includes('response') ||
-                    combinedText.includes('position') ||
-                    combinedText.includes('role') ||
-                    combinedText.includes('hiring')
-                ) {
-                    responseCount++;
-                }
-            }
-
-            setTotalApplications(messages.length);
-            setResponses(responseCount);
-            setRejections(rejectionCount);
-            setNoResponses(messages.length - responseCount - rejectionCount);
-            toast({
-                title: "Success",
-                description: "Emails Analyzed!",
-            })
-
-            console.log('📊 Email Summary:', {
-                total: messages.length,
-                responses: responseCount,
-                rejections: rejectionCount,
-                noResponses: messages.length - responseCount - rejectionCount,
-            });
-        } catch (error) {
-            console.error('Error fetching and processing emails:', error);
-        }
-    };
+      console.log('📊 Email Summary:', {
+        total: messages.length,
+        responses: responseCount,
+        rejections: rejectionCount,
+        noResponses: messages.length - responseCount - rejectionCount,
+      });
+    } catch (error) {
+      console.error('Error fetching and processing emails:', error);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen hazy-purple-background p-4 md:p-8">
@@ -272,17 +266,13 @@ export default function Home() {
 
       <section className="flex items-start space-x-8 flex-col md:flex-row">
         <div className="w-full md:w-1/2">
-          <h1
-            className="text-4xl font-bold tracking-tight text-foreground mb-4"
-            style={{fontFamily: 'DM Sans, sans-serif'}}>
+          <h1 className="text-4xl font-bold tracking-tight text-foreground mb-4" style={{fontFamily: 'DM Sans, sans-serif'}}>
             Track Your Job Applications{' '}
             <span className="text-purple-600">
               Automatically
             </span>
           </h1>
-          <p
-            className="text-muted-foreground text-lg"
-            style={{fontFamily: 'DM Sans, sans-serif'}}>
+          <p className="text-muted-foreground text-lg" style={{fontFamily: 'DM Sans, sans-serif'}}>
             Connect your Gmail account to instantly analyze your job search
             progress. Get insights on your applications, responses, and more.
           </p>
@@ -303,7 +293,7 @@ export default function Home() {
             )}
             <Button variant="outline">Learn more</Button>
           </div>
-          
+
           {!user && <p className="text-muted-foreground">Please sign in to analyze your emails.</p>}
         </div>
 
@@ -341,4 +331,3 @@ export default function Home() {
     </div>
   );
 }
-
