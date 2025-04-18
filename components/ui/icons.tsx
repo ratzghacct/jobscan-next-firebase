@@ -1,11 +1,14 @@
-// components/icons.tsx
-
-import { ExternalLink, X, LogOut, Info } from 'lucide-react';
+import { Loader2, LogOut, AlertCircle, ExternalLink, X } from "lucide-react";
 
 export const Icons = {
+  spinner: Loader2,
+  logout: LogOut,
+  alert: AlertCircle,
   externalLink: ExternalLink,
   close: X,
-  logout: LogOut,
-  info: Info,
-  logo: () => <span className="font-bold text-lg">🧠</span>,
+  logo: () => (
+    <span className="text-lg font-bold text-purple-600 tracking-tight">
+      JobScan
+    </span>
+  ),
 };
