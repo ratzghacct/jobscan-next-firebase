@@ -1,0 +1,21 @@
+{
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
+  "functions": {
+    "api/**.ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next",
+      "config": {
+        "nodeVersion": "18.x"
+      }
+    }
+  ]
+}
