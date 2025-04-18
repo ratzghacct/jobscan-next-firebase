@@ -1,15 +1,15 @@
-export function Alert({
-    title,
-    description,
-  }: {
-    title: string;
-    description: string;
-  }) {
-    return (
-      <div className="border-l-4 border-red-500 bg-red-100 p-4">
-        <h4 className="font-semibold text-red-600">{title}</h4>
-        <p className="text-sm text-red-700">{description}</p>
-      </div>
-    );
-  }
+import * as React from "react"
+
+export function Alert({ children, className }: { children: React.ReactNode, className?: string }) {
+  return <div className={`border border-red-500 text-red-700 p-4 rounded-md ${className}`}>{children}</div>
+}
+
+export function AlertTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="font-bold mb-1">{children}</h3>
+}
+
+export function AlertDescription({ children }: { children: React.ReactNode }) {
+  return <p>{children}</p>
+}
+
   
