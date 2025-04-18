@@ -1,14 +1,70 @@
-import { Loader2, LogOut, AlertCircle, ExternalLink, X } from "lucide-react";
+// components/icons.tsx
+import { AlertCircle, ArrowRight, Check, ChevronLeft, ChevronRight, Command, CreditCard, File, FileText, HelpCircle, Image, Laptop, Loader2, Moon, MoreVertical, Pizza, Plus, Settings, SunMedium, Trash, Twitter, User, X, Mail, Lock, Search, Home, LogOut, Github } from 'lucide-react';
+
+import type { LucideIcon } from "lucide-react";
+
+export type Icon = LucideIcon;
 
 export const Icons = {
-  spinner: Loader2,
-  logout: LogOut,
-  alert: AlertCircle,
-  externalLink: ExternalLink,
+  logo: Command,
   close: X,
-  logo: () => (
-    <span className="text-lg font-bold text-purple-600 tracking-tight">
-      JobScan
-    </span>
-  ),
+  spinner: Loader2,
+  chevronLeft: ChevronLeft,
+  chevronRight: ChevronRight,
+  trash: Trash,
+  settings: Settings,
+  user: User,
+  arrowRight: ArrowRight,
+  help: HelpCircle,
+  pizza: Pizza,
+  sun: SunMedium,
+  moon: Moon,
+  laptop: Laptop,
+  gitHub: Github,
+  twitter: Twitter,
+  check: Check,
+  more: MoreVertical,
+  add: Plus,
+  warning: AlertCircle,
+  file: File,
+  fileText: FileText,
+  image: Image,
+  creditCard: CreditCard,
+  mail: Mail,
+  lock: Lock,
+  search: Search,
+  home: Home,
+  logOut: LogOut,
+};
+
+export {
+  AlertCircle,
+  ArrowRight,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Command,
+  CreditCard,
+  File,
+  FileText,
+  HelpCircle,
+  Image,
+  Laptop,
+  Loader2,
+  Moon,
+  MoreVertical,
+  Pizza,
+  Plus,
+  Settings,
+  SunMedium,
+  Trash,
+  Twitter,
+  User,
+  X,
+  Mail,
+  Lock,
+  Search,
+  Home,
+  LogOut,
+  Github
 };
