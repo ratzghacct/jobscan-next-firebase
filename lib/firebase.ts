@@ -22,4 +22,13 @@ export const signInWithGoogle = async () => {
   const token = credential?.accessToken;
   const user = result.user;
   return { user, token };
+}; // Added missing closing brace
 
+export const logOut = async () => {
+  try {
+    await signOut(auth);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error };
+  }
+};
