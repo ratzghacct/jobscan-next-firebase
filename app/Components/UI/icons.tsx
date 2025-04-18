@@ -1,17 +1,18 @@
+import { Loader2, LogOut, Search, AlertTriangle, X, ExternalLink, Mail, CircleUser } from 'lucide-react';
+
 export const Icons = {
-  logo: (props: any) => (
-    <svg {...props} fill="currentColor" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" />
+  spinner: Loader2,
+  logout: LogOut,
+  search: Search,
+  alert: AlertTriangle,
+  close: X,
+  externalLink: ExternalLink,
+  mail: Mail,
+  user: CircleUser,
+  logo: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12L21 12" stroke="currentColor" strokeWidth="2" />
+      <path d="M12 3L12 21" stroke="currentColor" strokeWidth="2" />
     </svg>
   ),
-  externalLink: (props: any) => (
-    <svg {...props} fill="currentColor" viewBox="0 0 24 24">
-      <path d="M14 3h7v7h-2V6.41L10.41 15 9 13.59 17.59 5H14V3z"/>
-    </svg>
-  ),
-  close: (props: any) => (
-    <svg {...props} fill="currentColor" viewBox="0 0 24 24">
-      <path d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  )
-}
+};
